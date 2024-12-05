@@ -7,7 +7,7 @@
   
   "enableWebServer": true,
   "serverPort": 80,
-  "siteURL": "https://polariss-u2xo.onrender.com/",
+  "siteURL": "https://polariss-u2xo.onrender.com",
   
   "changelogURL": "",
   "supportURL": ""
