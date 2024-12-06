@@ -88,6 +88,8 @@ client.on("messageCreate", async message => {
 client.on("interactionCreate", async int => {
     
     if (!int.guild) return int.reply("You can't use commands in DMs!")
+
+    console.log(int);
         
     // for setting changes
     if (int.isStringSelectMenu()) {
