@@ -1,5 +1,6 @@
 const Discord = require("discord.js")
 const fs = require("fs")
+require('dotenv').config();
 
 const config = require("./config.json")
 
@@ -58,25 +59,26 @@ client.updateStatus = function() {
 
 // when online
 client.on("ready", () => {
-    if (client.shard.id == client.shard.count - 1) console.log(`Bot online! (${+process.uptime().toFixed(2)} secs)`)
-    client.startupTime = Date.now() - startTime
-    client.version = version
+    console.log(`Bot online! (${+process.uptime().toFixed(2)} secs)`);
+    console.log(`Shard ID: ${client.shard.id}, Shard Count: ${client.shard.count}`);
+    client.startupTime = Date.now() - startTime;
+    client.version = version;
 
     client.application.commands.fetch() // cache slash commands
     .then(cmds => {
         if (cmds.size < 1) { // no commands!! deploy to test server
-            console.info("!!! No global commands found, deploying dev commands to test server (Use /deploy global=true to deploy global commands)")
-            client.commands.get("deploy").run(client, null, client.globalTools)
+            console.info("!!! No global commands found, deploying dev commands to test server (Use /deploy global=true to deploy global commands)");
+            client.commands.get("deploy").run(client, null, client.globalTools);
         }
     })
+    .catch(err => console.error("Error fetching commands:", err));
 
-    client.updateStatus()
+    client.updateStatus();
     setInterval(client.updateStatus, 15 * 60000);
 
     // run the web server
-    if (client.shard.id == 0 && config.enableWebServer) require("./web_app.js")(client)
-})
-
+    if (client.shard.id == 0 && config.enableWebServer) require("./web_app.js")(client);
+});
 // on message
 client.on("messageCreate", async message => {
     if (message.system || message.author.bot) return
@@ -88,8 +90,6 @@ client.on("messageCreate", async message => {
 client.on("interactionCreate", async int => {
     
     if (!int.guild) return int.reply("You can't use commands in DMs!")
-
-    console.log(int);
         
     // for setting changes
     if (int.isStringSelectMenu()) {
@@ -133,4 +133,4 @@ client.on('warn', e => console.warn(e))
 process.on('uncaughtException', e => console.warn(e))
 process.on('unhandledRejection', (e, p) => console.warn(e))
 
-client.login(process.env.DISCORD_TOKEN)
+client.login(process.env.DISCORD_TOKEN);
